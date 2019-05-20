@@ -1,77 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
 import './page2.dart';
-String id="";
-Map<dynamic,dynamic> authordetails =new Map();
-List data = new List();
-List titles = [
-  'FICTION',
-  'NON-FICTION',
-  'Exam Corner',
-  'KIDS',
-  'Engineering',
-  'Medicine',
-  'Law',
-  'Computer Science'
-];
-List pro = [
-  '16 Downloads',
-  '3 Sections Finished',
-  '8 Passed',
-  '2 Times Winner',
-  '16 Downloads',
-  '3 Sections Finished',
-  '8 Passed',
-  '2 Times Winner',
-];
-List<Widget> assets = [
-  Image.asset(
-    'images/1.jpeg',
-    fit: BoxFit.cover,
-  ),
-  Image.asset(
-    'images/2.jpeg',
-    fit: BoxFit.fill,
-  ),
-  Image.asset(
-    'images/3.jpeg',
-    fit: BoxFit.fill,
-  ),
-  Image.asset(
-    'images/4.jpeg',
-    fit: BoxFit.fill,
-  ),
-  Image.asset(
-    'images/5.jpeg',
-    fit: BoxFit.fill,
-  ),
-  Image.asset(
-    'images/6.jpeg',
-    fit: BoxFit.fill,
-  ),
-  Image.asset(
-    'images/7.jpeg',
-    fit: BoxFit.fill,
-  ),
-  Image.asset(
-    'images/8.jpeg',
-    fit: BoxFit.fill,
-  ),
-];
-List<String> names = [
-  'Madrid',
-  'Paris',
-  'Warsaw',
-  'Old Factory',
-  'Modern Hotel',
-  'Barcelona',
-  'Wall Street',
-  "App'n'Roll Office"
-];
+import './data.dart';
 
 class FrontPage extends StatefulWidget {
   @override
@@ -109,18 +42,16 @@ class _FrontPageState extends State<FrontPage> {
                     margin:
                         const EdgeInsets.only(right: 0, bottom: 10, top: 10),
                     child: ListTile(
-                      onTap: () {
-                        //print(data[i]["_id"]);
-                         
+                      onTap: () async{
 
+                        id = data[i]["_id"];
+                        Map<dynamic,dynamic> authordets= await postRequest(id);
+                        authordetails=authordets["author"];
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) {
-                            //postRequest(data[i]["_id"]);
-                            id=data[i]["_id"];
-                            postRequest(id);
                             return Page2();
-                            }),
+                          }),
                         );
                       },
                       contentPadding: const EdgeInsets.all(15),
@@ -234,12 +165,14 @@ class _FrontPageState extends State<FrontPage> {
       ),
     );
   }
-}
 
-void postRequest(String id) async {
+
+
+
+  Future<Map<dynamic,dynamic>> postRequest(String id) async {
   var url = 'https://test-zypher.herokuapp.com/author/viewDetails';
   //Response response=new Response();
-  Dio dio = new Dio();
+  //Dio dio = new Dio();
   Map data = {"authorId": id};
   //encode Map to JSON
   //var body = json.encode(data);
@@ -248,12 +181,14 @@ void postRequest(String id) async {
     url,
     body: data,
   );
-  authordetails=json.decode(response.body);
+  // authordetails = json.decode(response.body);
+
   // var authordets = json.decode(response.body);
   // JsonEncoder encoder = new JsonEncoder.withIndent('  ');
   // String prettyprint = encoder.convert(authordetails);
   //print(prettyprint);
   //print(authordetails["author"].keys);
   //print(authordetails);
-  //return authordets;
+  return json.decode(response.body);
+}
 }

@@ -6,11 +6,12 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 import './appbar.dart';
-
+import './data.dart';
 void main() async{
 
   Map<dynamic,dynamic> dummy= await getJSON();
   data=dummy["authors"];
+
 
   return runApp(MaterialApp(
     title: 'zypher',
@@ -41,9 +42,15 @@ class _MyAppState extends State<MyApp> {
   }
 
   }
+
+
+
   Future<Map<dynamic, dynamic>> getJSON() async {
     String res = 'https://test-zypher.herokuapp.com/author/getAllAuthor';
     http.Response response = await http.get(res);
     return json.decode(response.body);
 }
+
+
+
 

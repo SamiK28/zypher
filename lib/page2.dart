@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import './data.dart';
 import './body.dart';
-
-
 
 class Page2 extends StatefulWidget {
   @override
@@ -10,34 +9,26 @@ class Page2 extends StatefulWidget {
 }
 
 class _Page2State extends State<Page2> {
-  List books = new List();
-  List booknames = new List();
-  String pop = authordetails["author"]["isPopular"]
-    ? authordetails["author"]["isPublic"]
+
+  @override
+  Widget build(BuildContext context) {
+    
+    books = authordetails["books"];
+      pop=authordetails["isPopular"]
+    ? authordetails["isPublic"]
         ? "A very Popular Author and a Public Figure"
         : "A very Popular Author"
     : "";
-  @override
-  void initState() {
-    books = authordetails["author"]["books"];
     for (int i = 0; i < books.length; i++) {
       booknames.add(books[i]["productName"]);
     }
-    String t;
     booknames.sort();
     books.sort((a, b) {
       a = books[0]["productName"];
       b = books[1]["productName"];
       return a.compareTo(b);
     });
-    print(books);
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    postRequest(id);
-    return Scaffold(
+    return authordetails.isNotEmpty?Scaffold(
       body: Padding(
         padding: const EdgeInsets.only(top: 25),
         child: Flex(
@@ -45,7 +36,7 @@ class _Page2State extends State<Page2> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Expanded(
-              flex: 2,
+              flex: 1,
               child: Card(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0)),
@@ -73,14 +64,14 @@ class _Page2State extends State<Page2> {
                       ListTile(
                         leading: CircleAvatar(
                           backgroundImage: NetworkImage(
-                            authordetails["author"]["authorImage"],
+                            authordetails["authorImage"],
                           ),
                           radius: 30,
                         ),
                         title: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            authordetails["author"]["name"],
+                            authordetails["name"],
                             style: TextStyle(
                                 color: Colors.white,
                                 fontStyle: FontStyle.italic,
@@ -90,7 +81,7 @@ class _Page2State extends State<Page2> {
                         subtitle: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            "${authordetails["author"]["authorBio"]}\n\n" + pop,
+                            "${authordetails["authorBio"]}\n\n" + pop,
                             style: TextStyle(color: Colors.white, fontSize: 14),
                           ),
                         ),
@@ -103,6 +94,7 @@ class _Page2State extends State<Page2> {
             ),
             Expanded(
               flex: 2,
+
               child: Container(
                 //color: Colors.blue,
                 child: GridView.builder(
@@ -123,12 +115,16 @@ class _Page2State extends State<Page2> {
                       ),
                     );
                   },
-                  itemCount: authordetails["author"]["books"].length,
+                  itemCount: authordetails["books"].length,
                 ),
               ),
             ),
           ],
         ),
+      ),
+    ):Material(
+      child: Center(
+        child: CircularProgressIndicator(),
       ),
     );
   }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import './data.dart';
-import './body.dart';
 
 class Page2 extends StatefulWidget {
   @override
